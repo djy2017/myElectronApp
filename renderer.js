@@ -5,3 +5,6 @@ console.log(555);
 
 var shell = require('electron').shell;
 shell.openExternal('https://github.com');
+function a(){
+  console.log(66);
+}
