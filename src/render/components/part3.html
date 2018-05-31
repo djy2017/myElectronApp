@@ -1,0 +1,15 @@
+<div id="part3">
+	<h2>this is fetch page</h2>
+	<button>detail</button>
+	<div id="part3-view"></div>
+</div>
+<script>
+	$('#part3 button').click(function(){
+		if($('#part3-view').html()==''){
+			$.get('html/part3.detail.html',function(data){
+				$('#part3-view').append(data);
+			});
+		}
+		
+	});
+</script>

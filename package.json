@@ -2,9 +2,12 @@
   "name": "electron-quick-start",
   "version": "1.0.0",
   "description": "A minimal Electron application",
-  "main": "main.js",
+  "main": "src/main",
   "scripts": {
-    "start": "electron ."
+    "start": "set THEDEMO=index & electron .",
+    "switchProxy":"set THEDEMO=switchProxy & electron .",
+    "testDrag":"set THEDEMO=testDrag & electron .",
+    "testBrowser":"set THEDEMO=testBrowser & electron ."
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -18,5 +21,8 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "~1.6.2"
+  },
+  "dependencies": {
+    "jquery": "^3.2.1"
   }
 }

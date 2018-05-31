@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <link rel="stylesheet" type="text/css" href="../assets/styles/render.css"/>
+    <link rel="stylesheet" type="text/css" href="../assets/styles/testbrowser.css"/>
+  </head>
+  <body>
+    <div id="switchProxy">
+      <header>Browser test</header>
+      <div class="wrap">
+        <input id="urlInput" type="text" placeholder="请输入网址,如：www.baidu.com">
+        <button id="go">add</button>
+        <div id="list">
+          <span class="active" name='webviewTag'>www.google.com</span>
+        </div>
+        <div id="wbwrap" class="webView">
+          <webview class="show" id="webviewTag" src='https://www.google.com' ></webview>
+        </div>
+      </div>
+    </div>
+    <script>
+      
+      // 获取存储历史记录
+      historySite = window.localStorage.getItem('testBrowserSiteArr')?JSON.parse(window.localStorage.getItem('testBrowserSiteArr')):[] 
+
+      let count = 0
+      let siteArr = []
+
+      let urlInput = document.getElementById('urlInput')
+      let webviewTag = document.getElementById('webviewTag')
+      let btn =  document.getElementById('go')
+      
+      // 设置代理
+      setTimeout(() => {
+        webviewTag.getWebContents().session.setProxy({ proxyRules: 'SOCKS5://23.236.77.160:1080' }, () => {})
+      },100)
+      
+      if(!historySite||historySite.length !== 0) {
+        historySite.forEach((url,i) => {
+          newWebview(url)
+        })
+      }
+      
+
+      
+      // input Enter 键监听
+      urlInput.addEventListener('keyup', (e) => {
+        if(e.which === 13){
+          let siteUrl = (() => {
+            if(/^https?\:\/\//.test(urlInput.value)){
+              return urlInput.value
+            }
+            urlInput.value = 'https://' + urlInput.value
+            return urlInput.value
+          })()
+          // webviewTag.setAttribute('src', siteUrl)
+          // 激活标签对应的webview加载input中的uro地址
+          for(let i=0,len=wbwrap.children.length;i<len;i++) {
+            if (wbwrap.children[i].style.display === 'flex'){
+              wbwrap.children[i].loadURL(siteUrl)
+              document.getElementsByName(wbwrap.children[i].id)[0].innerHTML =  siteUrl
+            }
+          }
+          //webviewTag.loadURL(siteUrl)
+        }
+      })
+
+      // 新建打开标签
+      btn.addEventListener('click',(e) =>{
+
+        let siteUrl = (() => {
+          if(/^https?\:\/\//.test(urlInput.value)){
+            return urlInput.value
+          }
+          urlInput.value = 'https://' + urlInput.value
+          return urlInput.value
+        })()
+        
+        newWebview(siteUrl)
+          
+      })
+      
+      // 打开新webview
+      function newWebview(url){
+        // 创建webview对象
+        let wb = document.createElement('webview')
+        // wb.style.height = '100%'
+        wb.id = 'webviewId' + (count)
+        wb.classList.add('show')
+        wb.addEventListener('new-window', (e) => {
+          console.log('new-win')
+          e.preventDefault()
+          newWebview(e.url)
+        })
+
+        wb.addEventListener('will-navigate',(e) => {
+          console.log('will-navigate')
+          console.log(e.url)
+        })
+
+        // 创建标签 
+        let sp = document.createElement('span')
+        sp.innerHTML = url
+        sp.setAttribute('name',`webviewId${count ++}`) 
+        sp.addEventListener('click',showWeb)
+
+        list.getElementsByClassName('active')[0].classList.remove('active')
+        sp.classList.add('active')
+        
+
+        // 隐藏多余webview  
+        //wbwrap.getElementsByClassName('show')[0].stop()
+        wbwrap.getElementsByClassName('show')[0].classList.remove('show')
+        
+        list.appendChild(sp)
+        wbwrap.appendChild(wb)
+        wb.src = url
+        // wb.src = 'https://code.google.com/p/comet4j/' //siteUrl
+        siteArr.push(url)
+        window.localStorage.setItem('testBrowserSiteArr',JSON.stringify(siteArr))
+      }
+      
+      document.getElementsByName('webviewTag')[0].addEventListener('click', showWeb)
+
+      function showWeb(){
+        if(!this.classList.contains('active')){
+          list.getElementsByClassName('active')[0].classList.remove('active')
+          this.classList.add('active')
+        }
+        
+        let relateWebview = document.getElementById(this.getAttribute('name'))
+        if(!relateWebview.classList.contains('show')){
+          wbwrap.getElementsByClassName('show')[0].classList.remove('show')
+          relateWebview.classList.add('show')
+        }
+
+      }
+      
+
+      btn.addEventListener('dragstart', dragstart)
+      btn.addEventListener('dragover', dragover)
+      btn.addEventListener('dragleave', dragleave)
+      btn.addEventListener('dragend', dragend)
+      btn.addEventListener('drag', drag)
+      btn.addEventListener('drop', drop)
+
+      // 开始拖拽元素时触发（指的是拖拽元素本身触发的）
+      function dragstart(e) {
+        e.preventDefault();
+        console.log('dragstart')
+        return false
+      }
+
+      // 拖入文件（元素）在元素上方移动触发‘dragover’事件
+      function dragover(e) {
+        e.preventDefault();
+        console.log(e.dataTransfer)
+        console.log('dragover')
+        return false
+      }
+
+      // 文件（元素）从元素上方拖出时触发‘dragleave’事件
+      function dragleave(e) {
+        e.preventDefault();
+        console.log('dragleave')
+        return false
+      }
+
+      // 拖拽结束时触发
+      function dragend(e) {
+        e.preventDefault();
+        console.log('dragend')
+        return false
+      }
+
+      // 跟dragstart类似的
+      function drag(e) {
+        e.preventDefault();
+        console.log('drag')
+        return false
+      }
+
+      // 拖拽落下时
+      function drop(e) {
+        e.preventDefault();
+        console.log('drop')
+        console.log(e)
+        console.log(e.dataTransfer.files)
+        console.log(e.dataTransfer.files[0])
+        console.log(e.dataTransfer.items[0])
+        return false
+      }
+
+
+    </script>
+  </body>
+</html>

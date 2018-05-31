@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <link rel="stylesheet" type="text/css" href="css/render.css"/>
+  </head>
+  <style>
+    html,body {
+      height: 100%;
+    }
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+  	#switchProxy {
+  		width: 90%;
+  		height: 100%;
+  		margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+  	}
+    header {
+      display: block;
+      height: 40px;
+      line-height: 40px;
+      width: 100%;
+      text-align: center;
+      font-weight: 600;
+      position: relative;
+      -webkit-app-region: drag;
+      cursor: pointer;
+    }
+    button {
+      position: absolute;
+      width: 80px;
+      height: 40px;
+      background-color:gray;
+      right: 0;
+      outline: none;
+      border: none;
+      cursor: pointer;
+      z-index: 1; 
+      -webkit-app-region: no-drag;
+    }
+    .wrap {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .wrap input {
+      display: block;
+      height: 36px;
+      padding: 2px;
+      text-align: left;
+      line-height: 36px;
+      background-color: #f0f0f0;
+      outline: none;
+      border: 1px solid gray;
+    }
+    .webView {
+      flex: 1;
+      border: 1px solid gray;
+    }
+  </style>
+  <body>
+    <div id="switchProxy">
+      <header>switchProxy test <button id="switchProxy-btn">switchProxy</button></header>
+      <div class="wrap">
+        <input id="urlInput" type="text" placeholder="请输入网址,如：www.baidu.com">
+        <div class="webView">
+          <webview id="webviewTag" style="width: 100%;height: 100%;" src='//www.google.com' ></webview>
+        </div>
+      </div>
+    </div>
+    <script>
+      let urlInput = document.getElementById('urlInput')
+      let webviewTag = document.getElementById('webviewTag')
+      let btn =  document.getElementById('switchProxy-btn')
+       
+      console.log(webviewTag)
+      webviewTag.addEventListener('did-start-loading',function(){
+        console.log('start loading', webviewTag.getWebContents())
+      })
+      webviewTag.addEventListener('load-commit',function(){
+        console.log('load-commit', webviewTag.getWebContents())
+      })
+      
+      setTimeout(() => {
+        console.log('100ms', webviewTag.getWebContents())
+      }, 100)
+      
+
+      // input Enter 键监听
+      urlInput.addEventListener('keyup', (e) => {
+        if(e.which === 13){
+          let siteUrl = (() => {
+            if(/^https?\:\/\//.test(urlInput.value)){
+              return urlInput.value
+            }
+            urlInput.value = 'https://' + urlInput.value
+            return urlInput.value
+          })()
+          webviewTag.setAttribute('src', siteUrl)
+        }
+      })
+
+      btn.addEventListener('click',(e) =>{
+        require('electron').ipcRenderer.send('switchProxy','switchProxy');
+      })
+
+      require('electron').ipcRenderer.on('setProxy_success',() => {
+        webviewTag.reload()
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>test drag</title>
+</head>
+<style>
+  * {padding: 0;margin: 0}
+  #dragContainer {
+    width: 85%;
+    margin: 20px auto;
+    height: 80px;
+    border: 1px dotted gray;
+  }
+  #showStatus {
+    width: 85%;
+    margin: 20px auto;
+    min-height: 80px;
+    border: 1px solid gray;
+    max-height: 300px;
+    overflow: auto;
+  }
+</style>
+<body>
+  <div id="dragContainer"></div>
+  <div id="showStatus"></div>
+</body>
+<script>
+  let container = document.getElementById('dragContainer')
+  container.addEventListener('dragstart', dragstart)
+  container.addEventListener('dragover', dragover)
+  container.addEventListener('dragleave', dragleave)
+  container.addEventListener('dragend', dragend)
+  container.addEventListener('drag', drag)
+  container.addEventListener('drop', drop)
+
+  // 开始拖拽元素时触发（指的是拖拽元素本身触发的）
+  function dragstart(e) {
+    e.preventDefault();
+    console.log('dragstart')
+    return false
+  }
+
+  // 拖入文件（元素）在元素上方移动触发‘dragover’事件
+  function dragover(e) {
+    e.preventDefault();
+    console.log(e.dataTransfer)
+    console.log('dragover')
+    return false
+  }
+
+  // 文件（元素）从元素上方拖出时触发‘dragleave’事件
+  function dragleave(e) {
+    e.preventDefault();
+    console.log('dragleave')
+    return false
+  }
+
+  // 拖拽结束时触发
+  function dragend(e) {
+    e.preventDefault();
+    console.log('dragend')
+    return false
+  }
+
+  // 跟dragstart类似的
+  function drag(e) {
+    e.preventDefault();
+    console.log('drag')
+    return false
+  }
+
+  // 拖拽落下时
+  function drop(e) {
+    e.preventDefault();
+    console.log('drop')
+    console.log(e.dataTransfer.files)
+    console.log(e.dataTransfer.files[0])
+    console.log(window.URL.createObjectURL(e.dataTransfer.files[0]))
+    require('electron').remote
+    return false
+  }
+
+</script>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="aa">
+			hello 
+		</div>
+		<script>
+			exports.aa=function(){
+				var aa=$('#aa');
+				aa[0].onclick=function(){
+					alert(66);
+				}
+				return aa;
+			}
+		</script>
+	</body>
+</html>

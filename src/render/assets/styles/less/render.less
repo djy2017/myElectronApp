@@ -1,0 +1,60 @@
+@headerH:50px;
+*{
+    margin: 0;
+    padding: 0;
+}
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+#header {
+    width: 100%;
+    background: grey;
+    -webkit-app-region: drag;
+    overflow: hidden;
+    div {
+        .fl();
+        overflow: hidden;
+    }
+    #log {
+        height: @headerH;
+        width: 100px;
+        img {
+            display: block;
+            height: 100%;
+            //width: 100%;
+        }
+    }
+    .headNav {
+        height: @headerH;
+        li{
+            -webkit-app-region: no-drag;
+            display: block;
+            .fl();
+            &:hover {
+                background: green;
+            }
+            height: @headerH;
+            width:100px;
+            line-height: @headerH;
+            cursor: pointer;
+            text-align: center;                 
+        }
+    }
+    #tool {
+        position: fixed;
+        top:0;
+        right: 0;
+        width: 150px;
+        height: @headerH*0.5;
+        overflow: hidden;
+        button {
+            -webkit-app-region: no-drag;
+            display: block;
+            .fl();
+            width: 50px;
+        }
+    }
+}

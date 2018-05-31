@@ -4,7 +4,12 @@
 console.log(555);
 
 var shell = require('electron').shell;
-shell.openExternal('https://github.com');
+//shell.openExternal('https://github.com');
 function a(){
   console.log(66);
 }
+const ipcRenderer = require('electron').ipcRenderer;
+$('#tool').find('button').click((e)=>{
+	var t=e.target;
+	ipcRenderer.send('miniwindow',$(t).index());
+});

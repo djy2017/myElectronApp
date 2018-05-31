@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <link rel="stylesheet" type="text/css" href="css/render.css"/>
+  </head>
+  <style>
+  	#view {
+  		width: 90%;
+  		height: 150px;
+  		margin: 10px auto;
+  		border: 1px solid green;
+  	}
+  </style>
+  <body>
+    <div>
+    	<div id="header">
+    		<div id="log">
+    			<img src="img/1.jpg"/>
+    		</div>
+    		<div class='headNav'>
+    			<ul>
+    				<li>首页</li>
+    				<li>浏览器</li>
+    				<li>采集</li>
+    			</ul>
+    		</div>
+    		<div id='tool'>
+    			<button>-</button>
+    			<button>口</button>
+    			<button>x</button>
+    		</div>
+    	</div>
+    	<div>
+    		<button>前进</button>
+    		<button>后退</button>
+    		<a href="https://www.hao123.com/" target='_blank'>hao123</a>
+    		<span id="back" style='display: inline-block;width: 50px;height: 30px;cursor: pointer;'>
+    			back
+    		</span>
+    		<span id="forward" style='display: inline-block;width: 50px;height: 30px;cursor: pointer;'>
+    			forward
+    		</span>
+    		<span id='childwin' style='display: inline-block;width: 150px;height: 30px;cursor: pointer;background: green;'>
+    			open child window
+    			</span>
+    		<div id="view">
+    			<div id='home'></div>
+    			<div id='browser'></div>
+    			<div id='fetch'></div>
+    		</div>
+    		<iframe width="300px" height="150px" src="https://www.baidu.com" />
+    	</div>
+    </div>
+  </body>
+	<!--<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+	<script src="js/jquery-1.11.3.js"></script>
+	<script>if (window.module) module = window.module;</script>-->
+  <script>
+  	let $=require('jquery');
+    // You can also require other files to run in this process
+    require('./renderer.js')
+    const nav=$('.headNav li');
+    Array.prototype.forEach.call(nav,(ele)=>{
+    	$(ele).click((e)=>{
+    		console.log($(e.target).index());
+    		$(e.target).addClass('active')
+    		.siblings().removeClass('active');
+    		$.get('html/part'+($(e.target).index()+1)+'.html',(data)=>{
+    			var box=$('#'+['home','browser','fetch'][$(e.target).index()]);
+    			if(box.html()==''){
+    				box.empty()
+    				.append(data)
+    			}
+    			box.show()
+    			.siblings().hide();
+    		});
+    	})
+    });
+    //与主线程交互
+    const ipcrenderer=require('electron').ipcRenderer;
+    ipcrenderer.on('new-window',(event,arg)=>{
+    	console.log(arg);
+    	$('iframe').attr('src',arg);
+    	
+    });
+    $('#back').click(()=>{
+    	ipcrenderer.send('back');
+    	$('iframe')[0].contentWindow.history.back();
+    });
+    $('#forward').click(()=>{
+    	//ipcrenderer.send('back');
+    	$('iframe')[0].contentWindow.history.forward();
+    });
+    $('#childwin').click(()=>{
+    	console.log('open new')
+    	ipcrenderer.send('openchildwindow')
+    });
+    
+    $('#home').on('click','#newp',function(){
+    	console.log(require('./aa.js'));
+    	var xx=require('./component1.html');
+    	$('#components').append(xx);
+    })
+    
+  </script>
+</html>

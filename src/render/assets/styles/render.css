@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+#header {
+  width: 100%;
+  background: grey;
+  -webkit-app-region: drag;
+  overflow: hidden;
+}
+#header div {
+  float: left;
+  overflow: hidden;
+}
+#header #log {
+  height: 50px;
+  width: 100px;
+}
+#header #log img {
+  display: block;
+  height: 100%;
+}
+#header .headNav {
+  height: 50px;
+}
+#header .headNav li {
+  -webkit-app-region: no-drag;
+  display: block;
+  float: left;
+  height: 50px;
+  width: 100px;
+  line-height: 50px;
+  cursor: pointer;
+  text-align: center;
+}
+#header .headNav li:hover,
+#header .headNav li.active {
+  background: green;
+}
+#header #tool {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 150px;
+  height: 25px;
+  overflow: hidden;
+}
+#header #tool button {
+  -webkit-app-region: no-drag;
+  display: block;
+  float: left;
+  width: 50px;
+}

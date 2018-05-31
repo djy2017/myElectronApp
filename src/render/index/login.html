@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<div>
+			<button id="login">登录</button>
+		</div>
+		<script>
+			var login=document.getElementById('login');
+			login.addEventListener('click',enter);
+			function enter(){
+				console.log('enter');
+				require('electron').ipcRenderer.send('login','djy');
+			}
+		</script>
+	</body>
+</html>
